@@ -15,7 +15,7 @@ const ContactImport = ({ onImport }) => {
 
       await axios.post(`${helper}/api/import`, formData);
       onImport();
-    } catch (error) {c
+    } catch (error) {
       console.error('Import failed:', error);
     }
   };
