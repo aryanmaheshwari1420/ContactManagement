@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import helper from './helper';
+const helper = require('./helper');
 const ContactImport = ({ onImport }) => {
   const [file, setFile] = useState(null);
 
