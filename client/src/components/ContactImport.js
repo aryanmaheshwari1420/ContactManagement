@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { BASE_URL } from './config';
+import helper from './helper';
 const ContactImport = ({ onImport }) => {
   const [file, setFile] = useState(null);
 
@@ -13,9 +13,9 @@ const ContactImport = ({ onImport }) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      await axios.post(`${BASE_URL}/api/import`, formData);
+      await axios.post(`${helper}/api/import`, formData);
       onImport();
-    } catch (error) {
+    } catch (error) {c
       console.error('Import failed:', error);
     }
   };
