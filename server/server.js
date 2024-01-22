@@ -1,27 +1,25 @@
 // server.js
+
 const express = require('express');
 const mongoose = require('mongoose');
-const contactImportRouter = require('./routes/contactImport');
-const contactListRouter = require('./routes/contactList');
-
+const multer = require('multer');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
+
+mongoose.connect('mongodb://localhost:27017/ContactManagement', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.use(express.json());
 
-// Connect to MongoDB (replace with your connection string)
-mongoose.connect('mongodb://localhost:27017/ContactManagement')
-  .then(() => {
-    console.log("Mongoose connected successfully");
-  })
-  .catch((error) => {
-    console.error("Mongoose connection error:", error);
-  });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// Routesc
-app.use('/api/import', contactImportRouter);
-app.use('/api/contacts', contactListRouter);
+// Import routes from separate file
+const contactRoutes = require('./routes/contactRoutes');
+app.use('/api', contactRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-}); 
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

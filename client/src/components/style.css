@@ -1,0 +1,36 @@
+/* style.css */
+
+.contactTableContainer {
+    width: 100%;
+    margin: 20px 0;
+  }
+  
+  .contactNumberHeaderContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: #f0f0f0;
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+  .contactNumberContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid #ddd;
+    margin-top: 5px;
+    padding: 10px;
+  }
+  
+  .contactNumberContainer p {
+    margin: 0;
+  }
+  
+  /* Additional styles (customize as needed) */
+  .contactNumberHeaderContainer p {
+    text-align: center;
+  }
+  
+  .contactNumberContainer:hover {
+    background-color: #f9f9f9;
+  }
+  
