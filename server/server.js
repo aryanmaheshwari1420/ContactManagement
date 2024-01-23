@@ -1,23 +1,22 @@
-// server.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const app = express();
 const port = process.env.PORT || 5000;
-const url = process.env.DATABASE
-mongoose.connect(DATABASE, {
+
+// Use the new URL parser (required for Mongoose >= 6)
+mongoose.connect("mongodb://localhost:27017/ContactManagement", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}, (err) => {
-  if (err) {
-    console.error('Error connecting to MongoDB:', err);
-  } else {
+})
+  .then(() => {
     console.log('Successfully connected to MongoDB');
-  }
-});
-
-
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+  });
+app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const storage = multer.memoryStorage();
