@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const cors = require('cors'); // Import the cors middleware
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -15,14 +16,16 @@ mongoose.connect("mongodb://localhost:27017/ContactManagement", {
   .catch((err) => {
     console.error('Error connecting to MongoDB:', err);
   });
+
+// Use the cors middleware
 app.use(cors());
-app.use(cors({ origin: '*' }));
+
 app.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Import routes from separate file
+// Import routes from a separate file
 const contactRoutes = require('./routes/contactRoutes');
 app.use('/api', contactRoutes);
 
