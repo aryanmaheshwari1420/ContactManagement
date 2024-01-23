@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import helper from "./helper";
+// import helper from "./helper";
 const ContactImport = ({ onImport, updateContact, contactsPerPage }) => {
   const [file, setFile] = useState(null);
 
@@ -18,7 +18,7 @@ const ContactImport = ({ onImport, updateContact, contactsPerPage }) => {
       formData.append("file", file);
       formData.append("contactsPerPage", contactsPerPage);
 
-      const res = await axios.post(`${helper}/api/import`, formData);
+      const res = await axios.post(`/api/import`, formData);
 
       console.log(res);
       updateContact(res.data.contacts, res.data.contactsCount);

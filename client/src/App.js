@@ -5,7 +5,7 @@ import axios from "axios";
 import ContactImport from "./components//ContactImport";
 import ContactList from "./components/ContactList";
 import Pagination from "./components//Pagination";
-import helper from "./components/helper";
+// import helper from "./components/helper";
 const App = () => {
   const [contacts, setContacts] = useState([]);
   const [totalContacts, setTotalContacts] = useState([]);
@@ -16,7 +16,7 @@ const App = () => {
     const fetchContacts = async () => {
       try {
         const response = await axios.get(
-          `${helper}/api/contacts?page=${currentPage}&limit=${contactsPerPage}`
+          `/api/contacts?page=${currentPage}&limit=${contactsPerPage}`
         );
         setContacts(response.data.contacts);
         setTotalContacts(response.data.contactsCount);
@@ -30,7 +30,7 @@ const App = () => {
   useEffect(() => {
     const deleteAllContacts = async () => {
       try {
-        await axios.delete(`${helper}/api/deleteContacts`);
+        await axios.delete(`/api/deleteContacts`);
         console.log("All contacts deleted successfully");
         setContacts([]);
       } catch (error) {
