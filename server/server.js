@@ -5,11 +5,18 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const app = express();
 const port = process.env.PORT || 5000;
-
-mongoose.connect('mongodb://localhost:27017/ContactManagement', {
+const url = process.env.DATABASE
+mongoose.connect(DATABASE, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+}, (err) => {
+  if (err) {
+    console.error('Error connecting to MongoDB:', err);
+  } else {
+    console.log('Successfully connected to MongoDB');
+  }
 });
+
 
 app.use(express.json());
 

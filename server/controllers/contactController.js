@@ -6,8 +6,6 @@ const xlsx = require('xlsx');
 
 const importContacts = async (req, res) => {
 	const buffer = req.file.buffer;
-
-	// Process buffer based on file type (CSV or Excel)
 	let contacts = [];
 
 	try {
@@ -25,15 +23,21 @@ const importContacts = async (req, res) => {
 		} else {
 			throw new Error('Invalid file format');
 		}
-		console.log('contacts...', contacts);
-		// Store data in MongoDB (Contact model)
 		await Contact.insertMany(contacts);
-
-		res.status(200).send('Contacts imported successfully');
+		const contactRes = await Contact.find().limit(req.body.contactsPerPage);
+		const contactsCount = await Contact.find().count();
+		res.status(200).json({
+			contacts: contactRes,
+			contactsCount: contactsCount,
+		});
 	} catch (error) {
 		if (error.code === 11000) {
-			console.error('Error importing contacts - Duplicate email:', error);
-			res.status(400).send('Duplicate email addresses found');
+			const contactRes = await Contact.find().limit(req.body.contactsPerPage);
+			const contactsCount = await Contact.find().count();
+			res.status(200).json({
+				contacts: contactRes,
+				contactsCount: contactsCount,
+			});
 		} else {
 			console.error('Error importing contacts:', error);
 			res.status(500).send('Internal Server Error');
@@ -96,7 +100,7 @@ const getContacts = async (req, res) => {
 	const { page = 1, limit = 10 } = req.query;
 
 	try {
-		const skip = Math.max(0, (page - 1) * limit); // Ensure skip is not negative
+		const skip = Math.max(0, (page - 1) * limit);
 
 		const contacts = await Contact.find().skip(skip).limit(parseInt(limit));
 		const contactsCount = await Contact.find().count();
@@ -109,8 +113,18 @@ const getContacts = async (req, res) => {
 		res.status(500).send('Internal Server Error');
 	}
 };
+const deleteAllContacts = async (req, res) => {
+	try {
+		await Contact.deleteMany();
+		res.status(200).send('All contacts deleted successfully');
+	} catch (error) {
+		console.error('Error deleting contacts:', error);
+		res.status(500).send('Internal Server Error');
+	}
+};
 
 module.exports = {
 	importContacts,
 	getContacts,
+	deleteAllContacts,
 };

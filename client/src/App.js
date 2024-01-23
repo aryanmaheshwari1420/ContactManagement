@@ -5,42 +5,73 @@ import axios from 'axios';
 import ContactImport from './components//ContactImport';
 import ContactList from './components/ContactList';
 import Pagination from './components//Pagination';
+const helper = require('./helper');
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const contactsPerPage = 10;
+	const [contacts, setContacts] = useState([]);
+	const [totalContacts, setTotalContacts] = useState([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [contactsPerPage, setContactsPerPage] = useState(10);
 
-  useEffect(() => {
-    // Fetch contacts from backend based on the currentPage
-    const fetchContacts = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/contacts?page=${currentPage}&limit=${contactsPerPage}`);
-        setContacts(response.data.contacts);
-      } catch (error) {
-        console.error('Error fetching contacts:', error);
-      }
-    };
+	useEffect(() => {
+		const fetchContacts = async () => {
+			try {
+				const response = await axios.get(
+					`${helper}/api/contacts?page=${currentPage}&limit=${contactsPerPage}`
+				);
+				setContacts(response.data.contacts);
+				setTotalContacts(response.data.contactsCount);
+			} catch (error) {
+				console.error('Error fetching contacts:', error);
+			}
+		};
+		fetchContacts();
+	}, [currentPage, contactsPerPage]);
 
-    fetchContacts();
-  }, [currentPage]);
+	useEffect(() => {
+		const deleteAllContacts = async () => {
+			try {
+				await axios.delete(`${helper}/api/deleteContacts`);
+				console.log('All contacts deleted successfully');
+				setContacts([]);
+			} catch (error) {
+				console.error('Error deleting contacts:', error);
+			}
+		};
+		deleteAllContacts();
+	}, []);
+	const handlePageChange = (selectedPage) => {
+		setCurrentPage(selectedPage);
+	};
 
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
+	const handleImport = () => {
+		setCurrentPage(1);
+	};
 
-  const handleImport = () => {
-    setCurrentPage(0);
-  };
-
-  return (
-    <div>
-      <h1>Contact Management</h1>
-      <ContactImport onImport={handleImport} />
-      <ContactList contacts={contacts} />
-      <Pagination pageCount={10} onPageChange={handlePageChange} />
-    </div>
-  );
+	return (
+		<div>
+			<h1>Contact Management</h1>
+			<ContactImport
+				onImport={handleImport}
+				updateContact={(updatedContacts, contactsCount) => {
+					setContacts(updatedContacts);
+					setTotalContacts(contactsCount);
+				}}
+				contactsPerPage={contactsPerPage}
+			/>
+			<ContactList contacts={contacts} />
+			<Pagination
+				totalItems={totalContacts}
+				itemsPerPage={contactsPerPage}
+				currentPage={currentPage}
+				onPageChange={handlePageChange}
+				handelItemsPerPage={(perPageItems) => {
+					setContactsPerPage(perPageItems);
+					console.log('perPageItems', perPageItems, contactsPerPage);
+				}}
+			/>
+		</div>
+	);
 };
 
 export default App;

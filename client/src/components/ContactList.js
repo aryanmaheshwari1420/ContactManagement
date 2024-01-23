@@ -3,8 +3,6 @@
 import React from 'react';
 import './style.css';
 const ContactList = ({ contacts }) => {
-	console.log(contacts);
-
 	const contactList = contacts || [];
 
 	return (
