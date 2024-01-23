@@ -17,7 +17,6 @@ mongoose.connect("mongodb://localhost:27017/ContactManagement", {
     console.error('Error connecting to MongoDB:', err);
   });
 
-// app.use(cors());
 
 app.use(express.json());
 
